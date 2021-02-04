@@ -37,12 +37,10 @@ def thread_function(dataPath, ttv, user, extract, clip, ts):
                 labels.append(int(labels_data.loc[labels_data['ClipID'] == extract+'.avi', 'Engagement']))
         except:
             continue
-        
     with open('output/'+extract+'_frames.pkl','wb') as f:
         pickle.dump(frames,f)
     with open('output/'+extract+'_labels.pkl','wb') as f:
         pickle.dump(labels,f)
-
     return 0
 def currentTime(): #Current time in microseconds
     microseconds = time.time()/60
