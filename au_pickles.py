@@ -8,9 +8,9 @@ import csv
 import shutil
 
 outputDir='output\\'
-openFaceDir='C:\\Users\\Omar\\OpenFace_2.2.0_win_x64\\FeatureExtraction.exe'
-dataPath = 'C:\\Users\\Omar\\Data\\'
-noOfProcesses=2 #Maximum number of parallel processes 
+openFaceDir='D:/OpenFace/OpenFace_2.2.0_win_x64/FeatureExtraction.exe'
+dataPath = 'C:/Users/Moh.Massoud/ML/Engagment level/DAiSEE/Data/'
+noOfProcesses=20 #Maximum number of parallel processes 
 
 def thread_function(dataPath, ttv, user, extract, clip, ts):
     labels = []
@@ -67,13 +67,13 @@ if __name__ ==  '__main__':
                 tint+=1
     pool.close()
     pool.join()
-    for file in os.listdir(outputDir):
-        if file[-13:] == 'frames.pickle':
-            with open(outputDir+file, 'rb') as f:
-                frames=frames+pickle.load(f)
-        elif file[-13:] == 'labels.pickle':
-            with open(outputDir+file, 'rb') as f:
-                labels=labels+pickle.load(f)
+##    for file in os.listdir(outputDir):
+##        if file[-13:] == 'frames.pickle':
+##            with open(outputDir+file, 'rb') as f:
+##                frames=frames+pickle.load(f)
+##        elif file[-13:] == 'labels.pickle':
+##            with open(outputDir+file, 'rb') as f:
+##                labels=labels+pickle.load(f)
     end=currentTime()
     print(f'Total time = {end-start}')
-    print(len(labels))
+##    print(len(labels))
