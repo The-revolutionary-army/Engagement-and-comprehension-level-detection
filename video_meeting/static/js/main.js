@@ -9,12 +9,12 @@ const localVideo = document.querySelector('#local-video');
 const btnToggleAudio = document.querySelector('#btn-toggle-audio');
 const btnToggleVideo = document.querySelector('#btn-toggle-video');
 const btnSendMsg = document.querySelector('#btn-send-message');
-const btnShareScreen = document.querySelector('#btn-share-screen');
+const account = document.querySelector('select');
 var websocket;
 var mapPeers = {};
 var localStream;
-var mediaRecorder;
 var blob;
+const csrftoken = getCookie('csrftoken');
 
 var localStream = new MediaStream();
 const constraints = {
@@ -22,53 +22,9 @@ const constraints = {
     'audio': true
 }
 
-//capture camera and mic
-var userMedia = navigator.mediaDevices.getUserMedia(constraints)
-    .then(stream => {
-        localStream = stream;
-        mediaRecorder = new MediaRecorder(stream)
-        localVideo.srcObject = localStream;
-        localVideo.muted = true;
+changeAccount();
 
-        var audioTracks = stream.getAudioTracks();
-        var videoTracks = stream.getVideoTracks();
-
-        audioTracks[0].enabled = true;
-        videoTracks[0].enabled = true;
-
-        // toggle audio
-        btnToggleAudio.addEventListener('click', ()=>{
-            audioTracks[0].enabled = !audioTracks[0].enabled;
-
-            if(audioTracks[0].enabled){
-                btnToggleAudio.innerHTML = 'mute';
-                btnToggleAudio.style.color = 'green';
-                return;
-            }
-            btnToggleAudio.innerHTML = 'unmute';
-            btnToggleAudio.style.color = 'red';
-            
-        });
-        //toggle video
-        btnToggleVideo.addEventListener('click', ()=>{
-            videoTracks[0].enabled = !videoTracks[0].enabled;
-
-            if(videoTracks[0].enabled){
-                btnToggleVideo.innerHTML = 'camera off';
-                btnToggleVideo.style.color = 'green';
-                return;
-            }
-            btnToggleVideo.innerHTML = 'camera on';
-            btnToggleVideo.style.color = 'red';
-            
-        });
-    })
-    .catch(error => {
-        state.innerHTML = 'error accessing camera or mic';
-        state.style.color = 'red';
-        console.error('error accessing medial devices');
-        console.log(error)
-    });
+account.onchange = changeAccount;
 
 // join meeting
     btnJoin.addEventListener('click', ()=>{
@@ -118,6 +74,28 @@ var userMedia = navigator.mediaDevices.getUserMedia(constraints)
             state.style.color = 'red';
             console.error('failed to connect');
         });
+
+        // if user is student
+        if(account.value == 'student'){
+            // create file for user states
+            fetch('http://'+window.location.host+'/create/?username='+labelUsername.innerHTML)
+            .then(response => {
+                if(response.status == 200){    
+                    state.innerHTML = 'connected';
+                    state.style.color = 'green';
+                }
+            }).catch((error) => {
+                state.innerHTML = 'connection error';
+                state.style.color = 'orange';
+                console.error('Error:', error);
+            });
+            // get video frames 
+            getFrames();
+        } else {
+            // get results
+            setInterval(()=>getResults(), 1000);
+        }
+
     });
 
 // send message in chat
@@ -204,7 +182,7 @@ function createOfferer(peerUsername, receiver_channel_name) {
     dc.addEventListener('message', dcOnMessage);
 
     //create video for the received stream
-    var remoteVideo = creareVideo(peerUsername);
+    var remoteVideo = createVideo(peerUsername);
     setOnTrack(peer, remoteVideo);
 
     mapPeers[peerUsername] = [peer, dc];
@@ -248,7 +226,7 @@ function createAnswerer(offer, peerUsername, receiver_channel_name){
     addLocalTracks(peer);
 
     //create video for received stream
-    var remoteVideo = creareVideo(peerUsername);
+    var remoteVideo = createVideo(peerUsername);
     setOnTrack(peer, remoteVideo);
 
     peer.addEventListener('datachannel', e => {
@@ -316,7 +294,7 @@ function dcOnMessage(event) {
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-function creareVideo(peerUsername) {
+function createVideo(peerUsername) {
     var remoteVideo = document.createElement('video');
     remoteVideo.id = peerUsername+'-video';
     remoteVideo.autoplay = true;
@@ -326,9 +304,14 @@ function creareVideo(peerUsername) {
     labelUsername.classList.add('username');
     labelUsername.appendChild(document.createTextNode(peerUsername));
 
+    var states = document.createElement('p');
+    states.id = 'states';
+    states.appendChild(document.createTextNode(''));
+
     var videoWrapper = document.createElement('div');
     videoWrapper.appendChild(remoteVideo);
     videoWrapper.appendChild(labelUsername);
+    videoWrapper.appendChild(states);
 
     videoContainer.appendChild(videoWrapper);
 
@@ -360,4 +343,172 @@ function getDataChannels() {
     return dataChannels;
 }
 
+function getCookie(name) { //getting csrf token from cookies to use in ajax
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
+function getFrames() {
+    var canvas = document.createElement('canvas');
+    canvas.width = localVideo.videoWidth;
+    canvas.height = localVideo.videoHeight;
+    var ctx = canvas.getContext('2d');
+    setInterval(() => {
+        ctx.drawImage(localVideo, 0, 0, canvas.width, canvas.height); 
+        canvas.toBlob(uploadFrame, 'image/jpeg');
+    }, 1000/10)
+}
+
+function uploadFrame(frame) {
+    var url = 'http://'+window.location.host+'/model/';
+    // upload file to server
+    var fd = new FormData();
+    fd.append(labelUsername.innerHTML,frame);
+    fetch(url,{
+        method:'POST',
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers:{
+            'X-CSRFToken': csrftoken
+        },
+        body:fd
+    }).then(response => {
+        if(response.status == 200){    
+            state.innerHTML = 'connected';
+            state.style.color = 'green';
+        }
+    }).catch((error) => {
+        state.innerHTML = 'connection error';
+        state.style.color = 'orange';
+        console.error('Error:', error);
+    });
+}
+
+function changeAccount() {
+    if(account.value == 'lecturer'){
+        btnToggleVideo.style.visibility = 'visible';
+        // set stream to screen
+        var userMedia = navigator.mediaDevices.getUserMedia({'audio':true,'video':{ mediaSource: "screen" }})
+        .then(stream => {
+            localStream = stream;
+            localVideo.srcObject = localStream;
+            localVideo.muted = true;
+    
+            var audioTracks = stream.getAudioTracks();
+            var videoTracks = stream.getVideoTracks();
+    
+            audioTracks[0].enabled = true;
+            videoTracks[0].enabled = true;
+    
+            // toggle audio
+            btnToggleAudio.addEventListener('click', ()=>{
+                audioTracks[0].enabled = !audioTracks[0].enabled;
+    
+                if(audioTracks[0].enabled){
+                    btnToggleAudio.innerHTML = 'mute';
+                    btnToggleAudio.style.color = 'green';
+                    return;
+                }
+                btnToggleAudio.innerHTML = 'unmute';
+                btnToggleAudio.style.color = 'red';
+                
+            });
+    
+            //toggle video
+            btnToggleVideo.addEventListener('click', ()=>{
+                videoTracks[0].enabled = !videoTracks[0].enabled;
+    
+                if(videoTracks[0].enabled){
+                    btnToggleVideo.innerHTML = 'stop sharing';
+                    btnToggleVideo.style.color = 'green';
+                    return;
+                }
+                btnToggleVideo.innerHTML = 'share screen';
+                btnToggleVideo.style.color = 'red';
+                
+            });
+        }).catch(error => {
+            state.innerHTML = 'can\'t have permission to share screen';
+            state.style.color = 'red';
+            console.log(error);
+        });
+    } else {
+        btnToggleVideo.style.visibility = 'hidden';
+        navigator.mediaDevices.getUserMedia(constraints)
+        .then(stream => {
+            localStream = stream;
+            localVideo.srcObject = localStream;
+            localVideo.muted = true;
+    
+            var audioTracks = stream.getAudioTracks();
+            var videoTracks = stream.getVideoTracks();
+    
+            audioTracks[0].enabled = true;
+            videoTracks[0].enabled = true;
+    
+            // toggle audio
+            btnToggleAudio.addEventListener('click', ()=>{
+                audioTracks[0].enabled = !audioTracks[0].enabled;
+    
+                if(audioTracks[0].enabled){
+                    btnToggleAudio.innerHTML = 'mute';
+                    btnToggleAudio.style.color = 'green';
+                    return;
+                }
+                btnToggleAudio.innerHTML = 'unmute';
+                btnToggleAudio.style.color = 'red';
+                
+            });
+        }).catch(error => {
+            state.innerHTML = 'error accessing camera or mic';
+            state.style.color = 'red';
+            console.log(error)
+        });
+    }
+}
+
+function getResults() {
+    fetch('http://'+window.location.host+'/states/',{
+        method:'GET',
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers:{
+            'X-CSRFToken': csrftoken
+        }
+    }).then(response => {
+        if(response.status == 200){    
+            state.innerHTML = 'connected';
+            state.style.color = 'green';
+            return response.json();
+        }
+    }).then(data => {
+        if(data){
+            for (usr of videoContainer.children){
+                usrname = usr.children[1].innerHTML;
+                if (!usrname.includes('(me)')) {
+                    var states = document.querySelector('#states');
+                    var engagement = (data[usrname]['engagement']*100).toFixed(2);
+                    var confusion = (data[usrname]['confusion']).toFixed(2);
+                    var boredom = (data[usrname]['boredom']).toFixed(2);
+                    var frustration = (data[usrname]['frustration']).toFixed(2);
+                    states.innerHTML = `${engagement}   ${confusion}   ${boredom}   ${frustration}`;
+                }
+            }
+        }
+    }).catch((error) => {
+        state.innerHTML = 'connection error';
+        state.style.color = 'orange';
+        console.error('Error:', error);
+    });
+}

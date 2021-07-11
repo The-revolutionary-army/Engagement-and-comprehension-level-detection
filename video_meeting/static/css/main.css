@@ -10,7 +10,7 @@
 }
 
 .join div {
-    width: 30%;
+    width: 35%;
 }
 
 #state {
@@ -115,4 +115,11 @@ button:hover {
 
 button:disabled {
     visibility: hidden;
+}
+
+#states {
+    position: relative;
+    bottom: 50%;
+    background-color: #00000055;
+    color: white;
 }

@@ -15,8 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+import os
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('chat.urls'))
 ]
+
+# clean files from last session
+for file in os.listdir('tmp'):
+    os.remove('tmp/'+file)

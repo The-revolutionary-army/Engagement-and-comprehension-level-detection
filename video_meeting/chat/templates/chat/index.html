@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <title>Document</title>
+    <title>Video Meeting</title>
 </head>
 
 <body>
@@ -18,9 +18,14 @@
             <label id = "label-username">username</label>
             <input id="username" type="text" name="username">
             <button id="btn-join">join meeting</button>
+            <select name="account">
+                <option value="student" selected>student</option>
+                <option value="lecturer">lecturer</option>
+            </select>
             <p id="state"></p>
         </div>
     </div>
+
     <div class="main-grid-container">
         <div class="video-container">
             <div>
@@ -29,9 +34,8 @@
             </div>
         </div>
         <div class="control">
-            <!--<button id="btn-share-screen">share screen</button>-->
             <button id="btn-toggle-audio">mute</button>
-            <button id="btn-toggle-video">camera off</button>
+            <button id="btn-toggle-video">stop sharing</button>
         </div>
     </div>
     <div id="chat">
