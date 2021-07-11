@@ -6,10 +6,10 @@ import numpy as np
 import pandas as pd
 from .apps import ChatConfig
 
-def write_results(img, file):
+def write_results(frame, file):
     # detect faces
     detector = dlib.get_frontal_face_detector()
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = detector(gray)
     roi = []
     for face in faces:
@@ -18,10 +18,10 @@ def write_results(img, file):
         x2 = face.right()
         y2 = face.bottom()
         # if no face skip predictions
-        if len(img[y1:y2, x1:x2]) <= 0:
+        if len(frame[y1:y2, x1:x2]) <= 0:
             continue
         # append faces
-        roi.append(cv2.resize(cv2.cvtColor(img[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY), (48,48)))
+        roi.append(cv2.resize(cv2.cvtColor(frame[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY), (48,48)))
         # get predictions
         predictions = []
         if len(roi)>0:

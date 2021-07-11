@@ -17,7 +17,7 @@ var blob;
 const csrftoken = getCookie('csrftoken');
 
 var localStream = new MediaStream();
-const constraints = {
+var constraints = {
     'video': true,
     'audio': true
 }
@@ -445,7 +445,7 @@ function changeAccount() {
         });
     } else {
         btnToggleVideo.style.visibility = 'hidden';
-        navigator.mediaDevices.getUserMedia(constraints)
+        navigator.mediaDevices.getUserMedia({'video': true, 'audio': true})
         .then(stream => {
             localStream = stream;
             localVideo.srcObject = localStream;
@@ -497,7 +497,7 @@ function getResults() {
             for (usr of videoContainer.children){
                 usrname = usr.children[1].innerHTML;
                 if (!usrname.includes('(me)')) {
-                    var states = document.querySelector('#states');
+                    var states = usr.children[2];
                     var engagement = (data[usrname]['engagement']*100).toFixed(2);
                     var confusion = (data[usrname]['confusion']).toFixed(2);
                     var boredom = (data[usrname]['boredom']).toFixed(2);
