@@ -16,29 +16,37 @@
     <div class="join">
         <div>
             <label id = "label-username">username</label>
-            <input id="username" type="text" name="username">
+            <input id="username" type="text" name="username" placeholder="username">
             <button id="btn-join">join meeting</button>
-            <select name="account">
-                <option value="student" selected>student</option>
-                <option value="lecturer">lecturer</option>
-            </select>
-            <p id="state"></p>
         </div>
+        <select name="account">
+            <option value="student" selected>student</option>
+            <option value="lecturer">lecturer</option>
+        </select>
     </div>
+    <p id="state"></p>
 
-    <div class="main-grid-container">
-        <div class="video-container">
-            <div>
-                <video id="local-video" autoplay playsinline></video>
-                <p class="username"></p>
+    <div class="main-grid">
+        <div class="main-grid-container">
+            <div class="video-container">
+                <div class="local-video-container">
+                    <video id="local-video" autoplay playsinline></video>
+                    <p class="username"></p>
+                </div>
+                <div class="control">
+                    <button id="show-me">show me</button>
+                    <button id="btn-toggle-audio">mute</button>
+                    <button id="btn-toggle-video">stop sharing</button>
+                </div>
             </div>
         </div>
-        <div class="control">
-            <button id="btn-toggle-audio">mute</button>
-            <button id="btn-toggle-video">stop sharing</button>
+        <div id="student-states">
+            <p>Participants</p>
+            <ul id="students-list">
+            </ul>
         </div>
     </div>
-    <div id="chat">
+    <!-- <div id="chat">
         <div id="messages">
             <ul id="message-list"></ul>
         </div>
@@ -48,7 +56,7 @@
             <input id="msg" type="text" name="msg" placeholder="chat with others">
             <button id="btn-send-message">send</button>
         </div>
-    </div>
+    </div> -->
     <script src="{% static 'js/main.js' %}"></script>
 </body>
 

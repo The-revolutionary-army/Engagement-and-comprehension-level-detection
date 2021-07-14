@@ -22,6 +22,7 @@ def write_results(img, file):
             continue
         # append faces
         roi.append(cv2.resize(cv2.cvtColor(img[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY), (48,48)))
+        au = ChatConfig.au_model.predict(cv2.cvtColor(img[y1-100:y2+100, x1-100:x2+100], cv2.COLOR_BGR2RGB))
         # get predictions
         predictions = []
         if len(roi)>0:
@@ -34,8 +35,16 @@ def write_results(img, file):
             "engagement":[predictions[0][0][1]],
             "confusion":[predictions[1][0][1]],
             "boredom":[predictions[2][0][1]],
-            "frustration":[predictions[3][0][1]]
+            "frustration":[predictions[3][0][1]],
         }
+        pos_au = au["AU02"]+au["AU05"]+au["AU12"]
+        neg_au = au["AU04"]+au["AU07"]+au["AU15"]
+        neg_state = (round(states["confusion"][0])+round(states["boredom"][0])+round(states["frustration"][0]))
+        pos_state = 3-neg_state
+        eng=states["engagement"][0]
+        states["comprehension"]=[np.sign(max(0,eng*(pos_au+pos_state-neg_au-neg_state)))]
+
+
         df = pd.DataFrame(states)
         df.to_csv(file,mode='a', header=False, index = False)
         return True
