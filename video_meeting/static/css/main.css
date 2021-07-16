@@ -162,6 +162,7 @@ video {
     justify-content: flex-end;
     gap: 10px;
     transition: bottom 0.2s ease;
+    z-index:100;
 }
 
 .control * {

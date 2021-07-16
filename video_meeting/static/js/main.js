@@ -379,7 +379,7 @@ function getFrames() {
     setInterval(() => {
         ctx.drawImage(localVideo, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(uploadFrame, 'image/jpeg');
-    }, 1000 / 10)
+    }, 1000 / 25)
 }
 
 function uploadFrame(frame) {
@@ -499,9 +499,9 @@ function getResults() {
         }
     }).then(data => {
         if (data) {
-            var studentStates = document.createElement('li');
             studentsList.innerHTML = '';
             for (usr of data) {
+		var studentStates = document.createElement('li');
                 studentStates.innerHTML = `
                     <div class="user-img"><img src="../static/images/user.svg" alt="user-image"></div>
                     <div class="states-card">

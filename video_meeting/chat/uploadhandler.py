@@ -8,34 +8,35 @@ from .apps import ChatConfig
 
 def write_results(img, file):
     # detect faces
-    detector = dlib.get_frontal_face_detector()
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = detector(gray)
-    roi = []
-    for face in faces:
-        x1 = face.left()
-        y1 = face.top()
-        x2 = face.right()
-        y2 = face.bottom()
-        # if no face skip predictions
-        if len(img[y1:y2, x1:x2]) <= 0:
-            continue
-        # append faces
-        roi.append(cv2.resize(cv2.cvtColor(img[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY), (48,48)))
-        au = ChatConfig.au_model.predict(cv2.cvtColor(img[y1-100:y2+100, x1-100:x2+100], cv2.COLOR_BGR2RGB))
-        # get predictions
-        predictions = []
-        if len(roi)>0:
-            test_images = np.expand_dims(roi, axis=3)
-            predictions = ChatConfig.states_model.predict(test_images)
-    
     try:
+        detector = dlib.get_frontal_face_detector()
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = detector(gray)
+        roi = []
+        for face in faces:
+            x1 = face.left()
+            y1 = face.top()
+            x2 = face.right()
+            y2 = face.bottom()
+            # if no face skip predictions
+            if len(img[y1:y2, x1:x2]) <= 0 or len(img[y1-100:y2+100, x1-100:x2+100]) <= 0:
+                continue
+            # append faces
+            roi.append(cv2.resize(cv2.cvtColor(img[y1:y2, x1:x2], cv2.COLOR_BGR2GRAY), (48,48)))
+            au = ChatConfig.au_model.predict(cv2.cvtColor(img[y1-100:y2+100, x1-100:x2+100], cv2.COLOR_BGR2RGB))
+            # get predictions
+            predictions = []
+            if len(roi)>0:
+                test_images = np.expand_dims(roi, axis=3)
+                predictions = ChatConfig.states_model.predict(test_images)
+    
+    
         # write predictions as dataframe in csv
         states = {
-            "engagement":[predictions[0][0][1]],
-            "confusion":[predictions[1][0][1]],
-            "boredom":[predictions[2][0][1]],
-            "frustration":[predictions[3][0][1]],
+            "engagement":[round(predictions[0][0][1],3)],
+            "confusion":[round(predictions[1][0][1],3)],
+            "boredom":[round(predictions[2][0][1],3)],
+            "frustration":[round(predictions[3][0][1],3)],
         }
         pos_au = au["AU02"]+au["AU05"]+au["AU12"]
         neg_au = au["AU04"]+au["AU07"]+au["AU15"]
@@ -50,6 +51,8 @@ def write_results(img, file):
         return True
     except UnboundLocalError:
         # if no predictions return false
+        return False
+    except:
         return False
 
 def handle_uploaded_file(files):

@@ -36,7 +36,7 @@ def states_view(request):
     results = []
     for file in os.listdir('tmp'):
         filepath = 'tmp/'+file
-        states = load_results(filepath, 10)
+        states = load_results(filepath, 25)
         results.append({
             'username': file[:-4],
             'engagement':states[0],
