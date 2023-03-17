@@ -49,10 +49,19 @@ The results from all modules are periodically reported to the instructor to enab
 
 
 ## Attendance Module
+
+https://user-images.githubusercontent.com/36207910/226069030-076200b4-e092-422b-9e24-b1a21f0561ef.mp4
+
+<br/>
 The attendance module uses face recognition to identify students and create a report. The system takes pictures and checks identities based on facial features. The model is trained by comparing pictures and generates measurements called face embeddings. To identify students, previously measured faces are compared to find the closest match.
 
 
 ## Core Modules
+
+
+https://user-images.githubusercontent.com/36207910/226069079-bc612241-3286-4295-a0ed-33f68892fd78.mp4
+
+<br/>
 The objective of this study was to develop a model that could classify the emotional state of a person within an image. The input for the model is a 48x48 grayscale image of the person’s face. During the training phase, several architectures were experimented with to address issues such as skewed class distribution and overfitting.
 
 To address skewed class distribution, data augmentation and weighted class techniques were investigated. Four parallel convolutional neural networks (CNNs) were used for each emotional state (Engagement, Confusion, Frustration, and Boredom). Eventually, an all-convolutional net architecture was chosen for its accuracy in small details and its suitability for real-time detection of affective states. This architecture was modified by adding batch normalization and dropout to prevent overfitting.
@@ -98,6 +107,12 @@ If overall value exceeds specific threshold then we can say student understands 
 
 
 ## Application
+
+
+
+https://user-images.githubusercontent.com/36207910/226069114-b5840580-dad6-40f1-899b-813e02cfacd5.mp4
+
+<br/>
 The application uses Django for backend, to create API endpoints for the models and as a signaling server, and WebRTC for real-time video streaming between users. 
 WebRTC enables the web application to capture/stream media and exchange data between browsers without intermediaries. The process involves establishing a connection through signaling using the ICE protocol to generate media traversal candidates. An offer is created with user’s ICE candidate and sent in SDP format.other users respond to the offer with an answer message, also containing an SDP description. Once an agreement is reached between peers, a secure channel is established for sharing media.
 the signaling process requires a signaling server which serves as an intermediary to let the peers establish a connection by sending and receiving signaling information through WebSockets using Django Channels.
