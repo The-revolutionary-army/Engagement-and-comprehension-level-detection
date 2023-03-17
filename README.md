@@ -11,7 +11,7 @@
 5. [Future Work](#future-work)
 6. [Acknowledgements](#acknowledgements)
 8. [Authors](#authors)
-<br/>
+
 
 ---
 ## Introduction
@@ -21,7 +21,7 @@ This project aims to address this issue by utilizing artificial intelligence and
 
 The goal of this application is to bridge the gap between physical and virtual classrooms by providing educators with tools to enhance their ability to interact with students remotely.
 
-<br/>
+
 
 ---
 
@@ -32,7 +32,7 @@ The image was resized to 48x48 pixels to facilitate rapid processing and conserv
 
 Sequential processing of this large dataset was time-consuming, necessitating the implementation of parallel processing to expedite the task. A thread was assigned to each video for processing. The results were stored in pickle files after each video was processed. Pickle is a Python object used for rapid data storage and retrieval.
 
-<br/>
+
 
 --- 
 
@@ -46,7 +46,7 @@ The Attendance Recognition module verifies student presence in front of the devi
 
 The results from all modules are periodically reported to the instructor to enable real-time adaptation to student needs and behaviors in a manner similar to physical classrooms.
 
-<br/>
+
 
 ---
 
@@ -54,7 +54,7 @@ The results from all modules are periodically reported to the instructor to enab
 The attendance module uses face recognition to identify students and create a report. The system takes pictures and checks identities based on facial features. The model is trained by comparing pictures and generates measurements called face embeddings. To identify students, previously measured faces are compared to find the closest match.
 
 
-<br/>
+
 
 ---
 
@@ -72,7 +72,7 @@ During training, some problems were encountered such as exploding gradients in t
 | Boredom | 74.30% |
 [Parallel Model Architecture](./Models/parallel_model_architecture.pdf)
 
-<br/>
+
 
 ---
 
@@ -82,9 +82,9 @@ Our approach to detecting student comprehension during lectures involves using A
 We integrated OpenFace with our system using Python bindings. Our approach to detecting student comprehension involves combining positive and negative AUs and states in an equation to determine the probability of comprehension. If engagement in a frame is zero this means that the term is cancelled because we considered that if a student is not engaged this means they cannot understand. But if they are engaged then there is a probability of comprehension.
 
 The equation is as follows:
-> $ 
+> $$ 
 sgn(max(0, eng_i * \sum_{j=1}^{3}[(AU_{pos_j} + State_{pos_j}) - (AU_{neg_j} + State_{neg_j})]))
-$
+$$
 
 
 | Variable           | Description |
@@ -103,7 +103,7 @@ After that we get average value of all these terms which gives us percentage of 
 
 If overall value exceeds specific threshold then we can say student understands lecture during this time frame otherwise we say they cannot understand.
 
-<br/>
+
 
 ---
 
@@ -111,21 +111,21 @@ If overall value exceeds specific threshold then we can say student understands 
 The application uses Django for backend development and WebRTC for real-time video streaming between users. Django Channels creates a WebSocket endpoint for user connections. WebRTC enables web applications to capture/stream media and exchange data between browsers without intermediaries. The process involves obtaining browser information through signaling using the ICE protocol to generate media traversal candidates. A STUN server reveals the user’s public IP address for signaling other users. An offer is created with other users’ ICE candidates and sent through SDP. Once an agreement is reached between peers, a secure channel is established for sharing media.
 
 
-<br/>
+
 
 ---
 
 ## Future Work
 Future work includes using pop-ups with instructor-defined questions to enhance the comprehension and engagement modules. Natural language processing (NLP) will be used to measure answer quality. A model will also be developed to predict student performance based on cumulative data.
 
-<br/>
+
 
 ---
 
 ## Acknowledgement
 We would like to express our deepest appreciation to our project supervisor **Dr. Eman Abdel Ghaffar** for their invaluable guidance and support throughout our graduation project. Their expertise in human-computer interface and deep learning techniques has been instrumental in helping us tackle the challenges we faced. We are grateful for their encouragement and patience, which have inspired us to strive for excellence in our work. Thank you for being a wonderful mentor and for helping us achieve our goals.
 
-<br/>
+
 
 ---
 
