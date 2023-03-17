@@ -110,7 +110,9 @@ If overall value exceeds specific threshold then we can say student understands 
 ---
 
 ## Application
-The application uses Django for backend development and WebRTC for real-time video streaming between users. Django Channels creates a WebSocket endpoint for user connections. WebRTC enables web applications to capture/stream media and exchange data between browsers without intermediaries. The process involves obtaining browser information through signaling using the ICE protocol to generate media traversal candidates. A STUN server reveals the user’s public IP address for signaling other users. An offer is created with other users’ ICE candidates and sent through SDP. Once an agreement is reached between peers, a secure channel is established for sharing media.
+The application uses Django for backend, to create API endpoints for the models and as a signaling server, and WebRTC for real-time video streaming between users. 
+WebRTC enables the web application to capture/stream media and exchange data between browsers without intermediaries. The process involves establishing a connection through signaling using the ICE protocol to generate media traversal candidates. An offer is created with user’s ICE candidate and sent in SDP format.other users respond to the offer with an answer message, also containing an SDP description. Once an agreement is reached between peers, a secure channel is established for sharing media.
+the signaling process requires a signaling server which serves as an intermediary to let the peers establish a connection by sending and receiving signaling information through WebSockets using Django Channels.
 
 
 
