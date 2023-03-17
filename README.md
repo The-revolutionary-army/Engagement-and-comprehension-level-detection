@@ -1,4 +1,11 @@
 # Engagemnet and Comprehension Level Detection
+<div align="center">
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+![GitHub Repo stars](https://img.shields.io/github/stars/The-revolutionary-army/Engagement-and-comprehension-level-detection.svg?style=social&label=Stars)
+
+</div>
+
 ### Table of Contents. 
 1. [Introduction](#introduction)
 2. [Data Preprocessing](#data-preprocessing)
