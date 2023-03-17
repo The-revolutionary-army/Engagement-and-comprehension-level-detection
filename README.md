@@ -70,6 +70,7 @@ During training, some problems were encountered such as exploding gradients in t
 | Confusion | 82.08% |
 | Frustration | 88.02% |
 | Boredom | 74.30% |
+| Overall | 82.50% |
 
 [Parallel Model Architecture](./Models/parallel_model_architecture.pdf)
 
