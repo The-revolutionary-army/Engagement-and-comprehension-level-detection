@@ -13,7 +13,6 @@
 8. [Authors](#authors)
 
 
----
 ## Introduction
 During the COVID-19 pandemic, video conferencing applications faced the challenge of adapting to a significant increase in usage for remote work and education. The stability and effectiveness of these applications became crucial in retaining users. However, remote education presented a unique challenge for educators who previously relied on visual cues and in-person interactions to gauge student comprehension. The lack of these cues in virtual classrooms resulted in decreased interaction between students and educators.
 
@@ -21,9 +20,6 @@ This project aims to address this issue by utilizing artificial intelligence and
 
 The goal of this application is to bridge the gap between physical and virtual classrooms by providing educators with tools to enhance their ability to interact with students remotely.
 
-
-
----
 
 ## Data Preprocessing
 The dataset comprises 9068 videos from 112 users. Face detection is the initial step in ensuring accurate model performance. The Histogram of Oriented Gradients (HOG) method in the DLIB Python library was utilized for face detection. The detected face was then cropped from the frame. DLIB provided an effective face detector; however, other options were considered before selecting this detector based on its advantages and disadvantages compared to others.
@@ -33,10 +29,8 @@ The image was resized to 48x48 pixels to facilitate rapid processing and conserv
 Sequential processing of this large dataset was time-consuming, necessitating the implementation of parallel processing to expedite the task. A thread was assigned to each video for processing. The results were stored in pickle files after each video was processed. Pickle is a Python object used for rapid data storage and retrieval.
 
 
-
---- 
-
-> ## Proposed System
+## Proposed System
+![System Architecture](./Assets/System%20Architecture.jpg)
 ## Overview
 The proposed system utilizes webcam data to analyze student behavior during virtual lectures. Prior to using the system, users must agree to a privacy policy that prohibits the use of their data for commercial purposes.
 
@@ -47,16 +41,9 @@ The Attendance Recognition module verifies student presence in front of the devi
 The results from all modules are periodically reported to the instructor to enable real-time adaptation to student needs and behaviors in a manner similar to physical classrooms.
 
 
-
----
-
 ## Attendance Module
 The attendance module uses face recognition to identify students and create a report. The system takes pictures and checks identities based on facial features. The model is trained by comparing pictures and generates measurements called face embeddings. To identify students, previously measured faces are compared to find the closest match.
 
-
-
-
----
 
 ## Core Modules
 The objective of this study was to develop a model that could classify the emotional state of a person within an image. The input for the model is a 48x48 grayscale image of the person’s face. During the training phase, several architectures were experimented with to address issues such as skewed class distribution and overfitting.
@@ -72,11 +59,8 @@ During training, some problems were encountered such as exploding gradients in t
 | Boredom | 74.30% |
 | Overall | 82.50% |
 
-[Parallel Model Architecture](./Models/parallel_model_architecture.pdf)
+[Parallel Model Architecture](./Assets/parallel_model.png)
 
-
-
----
 
 ## Comprehension Estimation
 Our approach to detecting student comprehension during lectures involves using Action Units (AUs) and the OpenFace toolkit. AUs are individual components of muscle movement that describe facial expressions. OpenFace is a toolkit capable of facial landmark detection, head pose estimation, facial action unit recognition, and eye-gaze estimation.
@@ -106,32 +90,19 @@ After that we get average value of all these terms which gives us percentage of 
 If overall value exceeds specific threshold then we can say student understands lecture during this time frame otherwise we say they cannot understand.
 
 
-
----
-
 ## Application
 The application uses Django for backend, to create API endpoints for the models and as a signaling server, and WebRTC for real-time video streaming between users. 
 WebRTC enables the web application to capture/stream media and exchange data between browsers without intermediaries. The process involves establishing a connection through signaling using the ICE protocol to generate media traversal candidates. An offer is created with user’s ICE candidate and sent in SDP format.other users respond to the offer with an answer message, also containing an SDP description. Once an agreement is reached between peers, a secure channel is established for sharing media.
 the signaling process requires a signaling server which serves as an intermediary to let the peers establish a connection by sending and receiving signaling information through WebSockets using Django Channels.
 
 
-
-
----
-
 ## Future Work
 Future work includes using pop-ups with instructor-defined questions to enhance the comprehension and engagement modules. Natural language processing (NLP) will be used to measure answer quality. A model will also be developed to predict student performance based on cumulative data.
 
 
-
----
-
 ## Acknowledgement
 We would like to express our deepest appreciation to our project supervisor **Dr. Eman Abdel Ghaffar** for their invaluable guidance and support throughout our graduation project. Their expertise in human-computer interface and deep learning techniques has been instrumental in helping us tackle the challenges we faced. We are grateful for their encouragement and patience, which have inspired us to strive for excellence in our work. Thank you for being a wonderful mentor and for helping us achieve our goals.
 
-
-
----
 
 ## Authors
 >* Omar Ali : [@OmarAli3](https://github.com/OmarAli3)
